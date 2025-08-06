@@ -1,9 +1,9 @@
 name: Hoyolab Auto Daily
 
 on:
-  workflow_dispatch:  # permite executar manualmente
+  workflow_dispatch:  # permite rodar manualmente pelo botão "Run workflow"
   schedule:
-    - cron: "30 16 * * *" # horário UTC → 13:30 no Brasil (UTC-3)
+    - cron: "30 16 * * *" # 13:30 no Brasil (UTC-3) → 16:30 UTC
 
 jobs:
   checkin:
