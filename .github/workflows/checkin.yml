@@ -1,18 +1,30 @@
 name: Hoyolab Auto Daily
 
 on:
-  workflow_dispatch:  # permite rodar manualmente pelo botão "Run workflow"
+  workflow_dispatch: # permite execução manual
   schedule:
-    - cron: "30 16 * * *" # 13:30 no Brasil (UTC-3) → 16:30 UTC
+    - cron: "30 16 * * *" # 13:30 Brasil (UTC-3)
 
 jobs:
   checkin:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Run Hoyolab Check-in
-        uses: sglkc/hoyolab-auto-daily@master
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
         with:
-          cookie: ${{ secrets.COOKIE }}
-          games: ${{ vars.GAMES }}
-          account-description: "Conta Natan"
+          node-version: 18
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Criar config/accounts.json
+        run: |
+          mkdir -p config
+          echo '[{"name":"Conta Natan","ltuid_v2":"${{ secrets.LTUID_V2 }}","ltoken_v2":"${{ secrets.LTOKEN_V2 }}","games":["genshin","honkai_impact","honkai_star_rail","zenless"]}]' > config/accounts.json
+
+      - name: Rodar check-in
+        run: node index.js
